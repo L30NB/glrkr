@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>NJB Capital</title>
+<meta name="description" content="NJB Capital originates, structures and manages investment opportunities across Club Deals, Private Equity and Asset Management.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Hanken+Grotesk:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f5f6f8;
+  --surface:#ffffff;
+  --fg:#0f1b3a;
+  --muted:#5b6785;
+  --line:rgba(15,27,58,.16);
+  --brand:#25407e;          /* NJB logo blue */
+  --band:#0f1b3a;           /* deep navy band */
+  --band-fg:#f5f6f8;
+  --band-muted:#a9b4d0;
+  --band-line:rgba(245,246,248,.2);
+  --panel:#0f1b3a;
+  --serif:"Cormorant Garamond","Cormorant",Georgia,"Times New Roman",serif;
+  --sans:"Hanken Grotesk",system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+  --pad:clamp(24px,5vw,80px);
+  --ease:cubic-bezier(.2,.7,.2,1);
+  --ease-menu:cubic-bezier(.77,0,.18,1);
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0a1128;--surface:#0e1733;--fg:#e9edf6;--muted:#9aa5c2;--line:rgba(233,237,246,.16);
+    --brand:#b3c1ee;--band:#111d42;--band-fg:#f1f3f8;--band-muted:#a3afcc;--band-line:rgba(241,243,248,.2);--panel:#0d1636;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0a1128;--surface:#0e1733;--fg:#e9edf6;--muted:#9aa5c2;--line:rgba(233,237,246,.16);
+  --brand:#b3c1ee;--band:#111d42;--band-fg:#f1f3f8;--band-muted:#a3afcc;--band-line:rgba(241,243,248,.2);--panel:#0d1636;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px);-webkit-text-size-adjust:100%}
+body{margin:0;min-height:100%;background:var(--bg);color:var(--fg);font-family:var(--sans);font-weight:400;font-size:17px;line-height:1.7;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+h1,h2,h3,p,ol,ul,dl,dd{margin:0}
+ol,ul{padding:0;list-style:none}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
+:focus-visible{outline:2px solid var(--brand);outline-offset:4px}
+.panel :focus-visible,.band :focus-visible{outline-color:#fff}
+.wrap{max-width:1320px;margin:0 auto;padding-inline:var(--pad)}
+.serif{font-family:var(--serif)}
+
+/* ---------- Header ---------- */
+.header{position:fixed;inset:0 0 auto 0;z-index:30;padding-top:env(safe-area-inset-top,0px);transition:background .5s var(--ease),border-color .5s var(--ease),backdrop-filter .5s}
+.header-in{display:flex;align-items:center;justify-content:space-between;height:88px;max-width:1320px;margin:0 auto;padding-inline:var(--pad);transition:height .5s var(--ease)}
+.header.scrolled{background:color-mix(in srgb,var(--bg) 88%,transparent);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.header.scrolled .header-in{height:68px}
+.mark{display:flex;align-items:center;color:var(--brand)}
+.mark-njb{font-family:var(--serif);font-weight:600;font-size:2rem;letter-spacing:.09em;line-height:1}
+.mark-cap{margin-left:16px;padding-left:16px;border-left:1px solid var(--line);font-size:.68rem;letter-spacing:.34em;text-transform:uppercase;font-weight:500;color:var(--fg);line-height:1}
+.burger{width:48px;height:48px;margin-right:-10px;display:flex;flex-direction:column;align-items:flex-end;justify-content:center;gap:7px;padding-right:10px}
+.burger span{display:block;height:1.5px;background:var(--fg);width:28px;transition:width .4s var(--ease)}
+.burger span:nth-child(3){width:18px}
+.burger:hover span:nth-child(3){width:28px}
+
+/* ---------- Menu ---------- */
+.backdrop{position:fixed;inset:0;z-index:40;background:rgba(7,12,30,.55);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);opacity:0;visibility:hidden;transition:opacity .6s var(--ease),visibility 0s linear .6s}
+.panel{position:fixed;top:0;right:0;bottom:0;z-index:50;width:min(640px,100vw);background:var(--panel);color:#f5f6f8;display:flex;flex-direction:column;padding:calc(env(safe-area-inset-top,0px) + 24px) clamp(28px,5vw,64px) calc(env(safe-area-inset-bottom,0px) + 32px);transform:translateX(100%);visibility:hidden;transition:transform .75s var(--ease-menu),visibility 0s linear .75s;overflow-y:auto}
+.menu-open .backdrop{opacity:1;visibility:visible;transition:opacity .6s var(--ease),visibility 0s}
+.menu-open .panel{transform:none;visibility:visible;transition:transform .75s var(--ease-menu),visibility 0s}
+.panel-top{display:flex;align-items:center;justify-content:space-between;height:64px}
+.panel .mark{color:#fff}
+.panel .mark-cap{color:#cdd5ea;border-color:rgba(255,255,255,.25)}
+.close{width:48px;height:48px;margin-right:-12px;position:relative}
+.close::before,.close::after{content:"";position:absolute;left:12px;top:23px;width:24px;height:1.5px;background:#fff;transition:transform .5s var(--ease)}
+.close::before{transform:rotate(45deg)}
+.close::after{transform:rotate(-45deg)}
+.close:hover::before{transform:rotate(135deg)}
+.close:hover::after{transform:rotate(45deg)}
+.menu{margin:auto 0;padding:32px 0}
+.menu li{overflow:hidden;border-bottom:1px solid rgba(255,255,255,.12)}
+.menu li:first-child{border-top:1px solid rgba(255,255,255,.12)}
+.menu a{display:flex;align-items:baseline;gap:20px;padding:clamp(10px,1.8vh,18px) 0;font-family:var(--serif);font-size:clamp(1.9rem,4.6vh,2.9rem);font-weight:500;line-height:1.15;color:rgba(255,255,255,.72);transform:translateY(110%);transition:transform .8s var(--ease-menu),color .35s,padding-left .5s var(--ease)}
+.menu-open .menu a{transform:none;transition-delay:calc(.18s + var(--i)*.06s),0s,0s}
+.menu a .n{font-family:var(--sans);font-size:.72rem;letter-spacing:.2em;color:rgba(255,255,255,.4);min-width:2ch;transform:translateY(-.25em)}
+.menu a:hover,.menu a:focus-visible{color:#fff;padding-left:12px}
+.menu a[aria-current="page"]{color:#fff}
+.menu a[aria-current="page"] .n{color:#fff}
+.panel-foot{font-size:.9rem;color:#a9b4d0;line-height:1.6;opacity:0;transition:opacity .8s .7s}
+.menu-open .panel-foot{opacity:1}
+.panel-foot p+p{margin-top:2px}
+
+/* ---------- Views ---------- */
+main{min-height:100vh}
+.view{display:none}
+.view.active{display:block;animation:viewIn .9s var(--ease) both}
+.view.leaving{display:block;animation:viewOut .22s ease both}
+@keyframes viewIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes viewOut{to{opacity:0}}
+
+/* hero */
+.hero{position:relative;min-height:100vh;min-height:100svh;display:flex;align-items:flex-end;overflow:hidden;padding:140px 0 clamp(56px,10vh,110px)}
+.hero-mark{position:absolute;right:-3vw;bottom:-6vw;font-family:var(--serif);font-weight:600;font-size:clamp(14rem,40vw,42rem);line-height:.8;letter-spacing:.04em;color:transparent;-webkit-text-stroke:1px var(--line);user-select:none;pointer-events:none;white-space:nowrap}
+.hero .wrap{position:relative;width:100%}
+.hero-name{font-size:.78rem;letter-spacing:.38em;text-transform:uppercase;font-weight:500;color:var(--brand);margin-bottom:clamp(28px,5vh,56px)}
+.hero h1{font-family:var(--serif);font-weight:500;font-size:clamp(3.1rem,8.2vw,8rem);line-height:1;letter-spacing:-.012em}
+.hero h1 .line{display:block;overflow:hidden;padding-bottom:.12em;margin-bottom:-.12em}
+.hero h1 .line>span{display:inline-block;transform:translateY(108%);animation:lineUp 1.2s var(--ease) forwards;animation-delay:calc(.25s + var(--i)*.14s)}
+.hero h1 .line:nth-child(2){padding-left:clamp(0px,5vw,.9em)}
+.hero h1 .line:nth-child(3){padding-left:clamp(0px,10vw,1.8em)}
+@keyframes lineUp{to{transform:none}}
+.hero-sub{max-width:520px;margin-top:clamp(32px,6vh,60px);color:var(--muted);font-size:1.1rem;opacity:0;animation:fadeUp 1.1s var(--ease) 1s forwards}
+.hero-sub-row{display:flex;justify-content:flex-end}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+
+/* bands */
+.band{background:var(--band);color:var(--band-fg);padding:clamp(80px,12vw,160px) 0}
+.sec-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:24px;margin-bottom:clamp(40px,6vw,80px)}
+.sec-title{font-family:var(--serif);font-weight:500;font-size:clamp(2.2rem,4.6vw,4rem);line-height:1.08;max-width:14ch}
+.sec-note{max-width:34ch;color:var(--band-muted);font-size:1rem}
+.act{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr) 56px;gap:clamp(20px,4vw,64px);align-items:center;padding:clamp(28px,3.6vw,48px) 0;border-top:1px solid var(--band-line);position:relative;transition:padding .6s var(--ease)}
+.act:last-child{border-bottom:1px solid var(--band-line)}
+.act h3{font-family:var(--serif);font-weight:500;font-size:clamp(2rem,3.6vw,3.2rem);line-height:1.1}
+.act p{color:var(--band-muted);max-width:44ch}
+.arrow{width:56px;height:56px;border:1px solid var(--band-line);display:grid;place-items:center;border-radius:50%;transition:background .4s,border-color .4s,transform .5s var(--ease)}
+.arrow svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.2}
+.act:hover .arrow,.act:focus-visible .arrow{background:#fff;color:var(--band);border-color:#fff;transform:translateX(6px)}
+.act:hover{padding-left:12px}
+.act::after{content:"";position:absolute;left:0;top:-1px;height:1px;width:0;background:#fff;transition:width .8s var(--ease)}
+.act:hover::after,.act:focus-visible::after{width:100%}
+
+.statement{padding:clamp(88px,13vw,180px) 0}
+.statement p.big{font-family:var(--serif);font-weight:500;font-size:clamp(1.9rem,4vw,3.5rem);line-height:1.2;max-width:24ch}
+.statement .cols{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:clamp(32px,6vw,96px);align-items:end}
+.statement .side{color:var(--muted);max-width:44ch}
+.statement .side p+p{margin-top:1em}
+.text-link{display:inline-block;margin-top:28px;padding-bottom:6px;font-weight:500;font-size:.95rem;background:linear-gradient(currentColor,currentColor) 0 100%/100% 1px no-repeat;transition:background-size .5s var(--ease),color .3s}
+.text-link:hover{background-size:35% 1px;color:var(--brand)}
+
+/* inner pages */
+.page-head{padding:clamp(150px,22vh,230px) 0 clamp(56px,8vw,104px);border-bottom:1px solid var(--line)}
+.page-head h1{font-family:var(--serif);font-weight:500;font-size:clamp(2.9rem,7vw,6.4rem);line-height:1.02;letter-spacing:-.01em;max-width:16ch}
+.page-head .lede{margin-top:clamp(24px,4vw,44px);max-width:56ch;font-size:clamp(1.1rem,1.6vw,1.3rem);color:var(--muted);line-height:1.65}
+.section{padding:clamp(64px,9vw,128px) 0}
+.section+.section{padding-top:0}
+.split{display:grid;grid-template-columns:minmax(0,4fr) minmax(0,8fr);gap:clamp(32px,6vw,112px)}
+.split>h2{font-family:var(--serif);font-weight:500;font-size:clamp(1.8rem,3vw,2.6rem);line-height:1.12;max-width:12ch}
+.prose{max-width:62ch;color:var(--fg)}
+.prose p+p{margin-top:1.1em}
+.prose p.first{font-family:var(--serif);font-size:clamp(1.5rem,2.3vw,2rem);line-height:1.35;font-weight:500}
+
+.rows>div{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(16px,4vw,64px);padding:clamp(26px,3vw,40px) 0;border-top:1px solid var(--line)}
+.rows>div:last-child{border-bottom:1px solid var(--line)}
+.rows h3{font-family:var(--serif);font-weight:500;font-size:clamp(1.55rem,2.4vw,2.1rem);line-height:1.15;color:var(--brand)}
+.rows p{color:var(--muted);max-width:52ch}
+
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));column-gap:clamp(24px,4vw,64px)}
+.grid3>div{padding:clamp(26px,3vw,40px) 0 clamp(36px,4vw,56px);border-top:1px solid var(--line);transition:border-color .4s}
+.grid3>div:hover{border-top-color:var(--brand)}
+.grid3 h3{font-family:var(--serif);font-weight:500;font-size:clamp(1.55rem,2.2vw,2rem);line-height:1.15;color:var(--brand);margin-bottom:14px}
+.grid3 p{color:var(--muted);max-width:34ch}
+
+.steps{max-width:860px}
+.step{display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:clamp(20px,4vw,48px)}
+.rail{display:flex;flex-direction:column;align-items:center}
+.num{width:60px;height:60px;border:1px solid var(--brand);border-radius:50%;display:grid;place-items:center;font-family:var(--serif);font-size:1.5rem;font-weight:500;color:var(--brand);background:var(--bg)}
+.rail::after{content:"";flex:1;width:1px;background:var(--line);margin:10px 0}
+.step:last-child .rail::after{display:none}
+.step-body{padding:10px 0 clamp(36px,5vw,60px)}
+.step:last-child .step-body{padding-bottom:0}
+.step h3{font-family:var(--serif);font-weight:500;font-size:clamp(1.7rem,2.8vw,2.4rem);line-height:1.15;margin-bottom:10px}
+.step p{color:var(--muted);max-width:52ch}
+
+.principle{display:grid;grid-template-columns:minmax(0,6fr) minmax(0,5fr);gap:clamp(16px,4vw,64px);align-items:baseline;padding:clamp(28px,4vw,52px) 0;border-top:1px solid var(--line);position:relative}
+.principle:last-child{border-bottom:1px solid var(--line)}
+.principle::before{content:"";position:absolute;left:0;top:-1px;height:1px;width:0;background:var(--brand);transition:width 1s var(--ease)}
+.principle:hover::before{width:100%}
+.principle h3{font-family:var(--serif);font-weight:500;font-size:clamp(2.3rem,5.4vw,4.6rem);line-height:1;letter-spacing:-.01em}
+.principle p{color:var(--muted);max-width:40ch}
+
+.contact-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:clamp(24px,4vw,64px)}
+.contact-grid>div{padding:28px 0 40px;border-top:1px solid var(--line)}
+.contact-grid dt{font-size:.78rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:14px;font-weight:500}
+.contact-grid dd{font-family:var(--serif);font-size:1.6rem;line-height:1.3;color:var(--brand)}
+.ph{display:inline-block;border-bottom:1px dashed var(--line);padding-bottom:2px}
+.note{margin-top:20px;color:var(--muted);font-size:.95rem;max-width:60ch}
+
+/* footer */
+.foot{border-top:1px solid var(--line);padding:clamp(56px,8vw,104px) 0 40px;background:var(--surface)}
+body[data-page="contact"] .foot-cta{display:none}
+body[data-page="contact"] .foot{padding-top:40px}
+.foot-cta{display:block;margin-bottom:clamp(56px,8vw,104px)}
+.foot-cta span{display:block;font-family:var(--serif);font-weight:500;font-size:clamp(2.2rem,5.6vw,5rem);line-height:1.05;max-width:14ch;transition:color .4s}
+.foot-cta:hover span{color:var(--brand)}
+.foot-cta small{display:block;margin-top:22px;font-size:.95rem;color:var(--muted)}
+.foot-row{display:flex;flex-wrap:wrap;gap:16px 48px;justify-content:space-between;align-items:flex-start;color:var(--muted);font-size:.85rem;line-height:1.6}
+.foot-row .mark-njb{font-size:1.5rem}
+.foot-legal{max-width:62ch}
+
+/* responsive */
+@media (max-width:900px){
+  .split,.statement .cols,.rows>div,.principle{grid-template-columns:minmax(0,1fr)}
+  .split>h2{max-width:none}
+  .grid3,.contact-grid{grid-template-columns:minmax(0,1fr)}
+  .grid3 p{max-width:52ch}
+  .act{grid-template-columns:minmax(0,1fr) 48px;row-gap:12px}
+  .act p{grid-column:1;grid-row:2}
+  .act .arrow{grid-column:2;grid-row:1/3;width:48px;height:48px}
+  .hero h1 .line:nth-child(2),.hero h1 .line:nth-child(3){padding-left:0}
+  .hero-sub-row{justify-content:flex-start}
+}
+@media (max-width:600px){
+  body{font-size:16px}
+  .mark-cap{display:none}
+  .header-in{height:72px}
+  .num{width:50px;height:50px;font-size:1.3rem}
+  .hero-mark{right:-12vw}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-delay:0s!important;transition-duration:.01ms!important;transition-delay:0s!important}
+  .hero h1 .line>span{transform:none}
+  .hero-sub{opacity:1}
+}
+</style>
+</head>
+<body data-page="home">
+
+<header class="header" id="header">
+  <div class="header-in">
+    <a class="mark" href="#/home" aria-label="NJB Capital, home">
+      <span class="mark-njb">NJB</span><span class="mark-cap">Capital</span>
+    </a>
+    <button class="burger" id="burger" aria-label="Open menu" aria-expanded="false" aria-controls="panel">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<div class="backdrop" id="backdrop"></div>
+<aside class="panel" id="panel" role="dialog" aria-modal="true" aria-label="Site menu" inert>
+  <div class="panel-top">
+    <a class="mark" href="#/home" aria-label="NJB Capital, home"><span class="mark-njb">NJB</span><span class="mark-cap">Capital</span></a>
+    <button class="close" id="close" aria-label="Close menu"></button>
+  </div>
+  <nav aria-label="Primary">
+    <ul class="menu" id="menu">
+      <li><a href="#/home" data-page="home" style="--i:0"><span class="n">1</span>Home</a></li>
+      <li><a href="#/njb-capital" data-page="njb-capital" style="--i:1"><span class="n">2</span>NJB Capital</a></li>
+      <li><a href="#/club-deals" data-page="club-deals" style="--i:2"><span class="n">3</span>Club Deals</a></li>
+      <li><a href="#/private-equity" data-page="private-equity" style="--i:3"><span class="n">4</span>Private Equity</a></li>
+      <li><a href="#/asset-management" data-page="asset-management" style="--i:4"><span class="n">5</span>Asset Management</a></li>
+      <li><a href="#/investment-approach" data-page="investment-approach" style="--i:5"><span class="n">6</span>Investment Approach</a></li>
+      <li><a href="#/contact" data-page="contact" style="--i:6"><span class="n">7</span>Contact</a></li>
+    </ul>
+  </nav>
+  <div class="panel-foot">
+    <p>Origination. Investment. Management.</p>
+  </div>
+</aside>
+
+<main id="main">
+
+<!-- HOME -->
+<section class="view" id="page-home" data-title="NJB Capital">
+  <div class="hero">
+    <div class="hero-mark" aria-hidden="true">NJB</div>
+    <div class="wrap">
+      <p class="hero-name">NJB Capital</p>
+      <h1>
+        <span class="line"><span style="--i:0">Origination.</span></span>
+        <span class="line"><span style="--i:1">Investment.</span></span>
+        <span class="line"><span style="--i:2">Management.</span></span>
+      </h1>
+      <div class="hero-sub-row">
+        <p class="hero-sub">NJB Capital originates, structures and manages investment opportunities across Club Deals, Private Equity and Asset Management.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="band">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2 class="sec-title">Three areas of activity</h2>
+        <p class="sec-note">One discipline, applied to every opportunity we originate and every asset we manage.</p>
+      </div>
+      <div>
+        <a class="act" href="#/club-deals">
+          <h3>Club Deals</h3>
+          <p>Origination and management of tailored investment opportunities for selected investors.</p>
+          <span class="arrow" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 12h17M14 6l6 6-6 6"/></svg></span>
+        </a>
+        <a class="act" href="#/private-equity">
+          <h3>Private Equity</h3>
+          <p>Development and management of Private Equity fund projects focused on attractive long-term opportunities.</p>
+          <span class="arrow" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 12h17M14 6l6 6-6 6"/></svg></span>
+        </a>
+        <a class="act" href="#/asset-management">
+          <h3>Asset Management</h3>
+          <p>Active management of assets and investment strategies with a disciplined, long-term approach.</p>
+          <span class="arrow" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 12h17M14 6l6 6-6 6"/></svg></span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="statement">
+    <div class="wrap cols">
+      <p class="big">Selective by design. Aligned with our investors. Committed for the long term.</p>
+      <div class="side">
+        <p>We work with a limited number of opportunities and a limited circle of investors, so that each transaction receives the attention it deserves.</p>
+        <a class="text-link" href="#/njb-capital">About NJB Capital</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NJB CAPITAL -->
+<section class="view" id="page-njb-capital" data-title="NJB Capital">
+  <header class="page-head"><div class="wrap">
+    <h1>A disciplined investment firm, built on relationships.</h1>
+    <p class="lede">NJB Capital originates, structures and manages investment opportunities for selected investors and partners.</p>
+  </div></header>
+  <div class="section"><div class="wrap split">
+    <h2>Who we are</h2>
+    <div class="prose">
+      <p class="first">NJB Capital is an investment and asset management firm working at the intersection of origination, structuring and active management.</p>
+      <p>We bring investors and opportunities together with care and discretion. Our approach is deliberately selective: we take on fewer opportunities and give each the attention it requires, from first assessment to final realisation.</p>
+      <p>Investment decisions are guided by judgement, patience and a clear view of risk, and are made with the interests of our investors and partners in mind.</p>
+    </div>
+  </div></div>
+  <div class="section"><div class="wrap split">
+    <h2>What we bring</h2>
+    <div class="rows">
+      <div><h3>Investment expertise</h3><p>A considered understanding of how to assess businesses, assets and structures, and of what makes an investment worth pursuing.</p></div>
+      <div><h3>Deal origination</h3><p>Opportunities are identified and sourced proactively, then tested against clear criteria before they are presented.</p></div>
+      <div><h3>Structuring</h3><p>Each transaction is structured individually, with attention to governance, alignment and the practical needs of all parties.</p></div>
+      <div><h3>Long-term relationships</h3><p>We build lasting partnerships with investors, co-investors and management teams, based on trust and consistency.</p></div>
+      <div><h3>Active management</h3><p>Our involvement does not end at closing. We stay close to every investment throughout its life.</p></div>
+      <div><h3>Disciplined approach</h3><p>Clear processes and a consistent investment philosophy, applied with restraint.</p></div>
+    </div>
+  </div></div>
+</section>
+
+<!-- CLUB DEALS -->
+<section class="view" id="page-club-deals" data-title="Club Deals | NJB Capital">
+  <header class="page-head"><div class="wrap">
+    <h1>Club Deals</h1>
+    <p class="lede">Origination and management of tailored investment opportunities for selected investors.</p>
+  </div></header>
+  <div class="section"><div class="wrap split">
+    <h2>The Club Deal model</h2>
+    <div class="prose">
+      <p class="first">A Club Deal brings together a small group of selected investors to take part in a single investment opportunity.</p>
+      <p>NJB Capital originates the opportunity, structures the transaction and manages the investment on behalf of the group. Investors participate alongside one another, with interests that are clearly defined and aligned from the outset.</p>
+    </div>
+  </div></div>
+  <div class="section"><div class="wrap split">
+    <h2>From first look to realisation</h2>
+    <ol class="steps">
+      <li class="step"><div class="rail"><span class="num">01</span></div><div class="step-body"><h3>Origination</h3><p>We identify and source opportunities through our network and our own research, and assess them against clear criteria before any investor is approached.</p></div></li>
+      <li class="step"><div class="rail"><span class="num">02</span></div><div class="step-body"><h3>Structuring</h3><p>Each transaction is structured individually, with attention to legal, tax and governance considerations and to the alignment of all parties.</p></div></li>
+      <li class="step"><div class="rail"><span class="num">03</span></div><div class="step-body"><h3>Investor Selection</h3><p>Opportunities are shared with a limited circle of investors whose objectives, horizon and expectations fit the transaction.</p></div></li>
+      <li class="step"><div class="rail"><span class="num">04</span></div><div class="step-body"><h3>Execution</h3><p>We coordinate due diligence, documentation and closing, keeping the process orderly and transparent for every participant.</p></div></li>
+      <li class="step"><div class="rail"><span class="num">05</span></div><div class="step-body"><h3>Active Management</h3><p>After closing, we monitor performance, support the underlying business or asset and keep investors informed.</p></div></li>
+      <li class="step"><div class="rail"><span class="num">06</span></div><div class="step-body"><h3>Exit / Realisation</h3><p>We plan the exit with the same care as the entry, and pursue realisation at the point that best serves the investment.</p></div></li>
+    </ol>
+  </div></div>
+</section>
+
+<!-- PRIVATE EQUITY -->
+<section class="view" id="page-private-equity" data-title="Private Equity | NJB Capital">
+  <header class="page-head"><div class="wrap">
+    <h1>Private Equity</h1>
+    <p class="lede">Development and management of Private Equity fund projects focused on attractive long-term opportunities.</p>
+  </div></header>
+  <div class="section"><div class="wrap split">
+    <h2>Our activities</h2>
+    <div class="prose">
+      <p class="first">We develop Private Equity fund projects with a clear strategy, a rigorous process and a long-term perspective.</p>
+      <p>From sourcing to portfolio management, our work is organised around a small number of well-defined disciplines, each carried out with the same standard of care.</p>
+    </div>
+  </div></div>
+  <div class="section"><div class="wrap grid3">
+    <div><h3>Fund project development</h3><p>Defining strategy, focus and structure for fund projects that are credible, coherent and built to last.</p></div>
+    <div><h3>Investment sourcing</h3><p>Identifying opportunities through relationships and research, with a focus on quality over volume.</p></div>
+    <div><h3>Due diligence</h3><p>Thorough, independent assessment of businesses, markets and risks before any commitment is made.</p></div>
+    <div><h3>Structuring</h3><p>Transaction and fund structures that reflect the interests of investors and the realities of the underlying investment.</p></div>
+    <div><h3>Portfolio management</h3><p>Close oversight of each holding, with regular reporting and a clear view of progress against plan.</p></div>
+    <div><h3>Value creation</h3><p>Working with management teams on the operational and strategic levers that build lasting value.</p></div>
+  </div></div>
+</section>
+
+<!-- ASSET MANAGEMENT -->
+<section class="view" id="page-asset-management" data-title="Asset Management | NJB Capital">
+  <header class="page-head"><div class="wrap">
+    <h1>Asset Management</h1>
+    <p class="lede">Active management of assets and investment strategies with a disciplined, long-term approach.</p>
+  </div></header>
+  <div class="section"><div class="wrap split">
+    <h2>Our approach</h2>
+    <div class="prose">
+      <p class="first">We manage assets with attention, patience and a firm view of risk.</p>
+      <p>Our role is to protect and grow the capital entrusted to us, through active oversight and decisions grounded in a long-term perspective rather than short-term movements.</p>
+    </div>
+  </div></div>
+  <div class="section"><div class="wrap split">
+    <h2>Principles of management</h2>
+    <div class="rows">
+      <div><h3>Active portfolio oversight</h3><p>Continuous review of every position, so that the portfolio reflects current conditions and stated objectives.</p></div>
+      <div><h3>Risk management</h3><p>Risk is identified, measured and weighed before and after every decision, and never treated as an afterthought.</p></div>
+      <div><h3>Long-term value creation</h3><p>Decisions are made with the full life of an investment in view, favouring durable value over short-term gains.</p></div>
+      <div><h3>Capital preservation</h3><p>Protecting capital is a starting point for every strategy, and a standard against which each decision is tested.</p></div>
+      <div><h3>Strategic asset allocation</h3><p>A considered distribution of capital across assets and strategies, aligned with each investor's objectives and horizon.</p></div>
+    </div>
+  </div></div>
+</section>
+
+<!-- INVESTMENT APPROACH -->
+<section class="view" id="page-investment-approach" data-title="Investment Approach | NJB Capital">
+  <header class="page-head"><div class="wrap">
+    <h1>Investment Approach</h1>
+    <p class="lede">Five principles guide how we select, structure and manage every investment.</p>
+  </div></header>
+  <div class="section"><div class="wrap">
+    <div class="principle"><h3>Selectivity</h3><p>We pursue few opportunities and say no often. Quality of opportunity matters more than the quantity of transactions.</p></div>
+    <div class="principle"><h3>Discipline</h3><p>Clear criteria and consistent processes, applied with patience and without pressure to act.</p></div>
+    <div class="principle"><h3>Alignment</h3><p>Our interests are structured to be aligned with those of our investors and partners, from the first discussion to the final realisation.</p></div>
+    <div class="principle"><h3>Transparency</h3><p>Open, timely and honest communication with everyone who participates in an investment.</p></div>
+    <div class="principle"><h3>Long-term value creation</h3><p>We invest with a long horizon, and focus on building value that lasts.</p></div>
+  </div></div>
+</section>
+
+<!-- CONTACT -->
+<section class="view" id="page-contact" data-title="Contact | NJB Capital">
+  <header class="page-head"><div class="wrap">
+    <h1>Let's discuss an opportunity.</h1>
+    <p class="lede">We welcome conversations with investors, partners and intermediaries. All enquiries are treated with discretion.</p>
+  </div></header>
+  <div class="section"><div class="wrap">
+    <dl class="contact-grid">
+      <div><dt>Email</dt><dd><a class="text-link" style="margin-top:0;font-size:inherit;font-weight:inherit" href="mailto:contact@njbcapital.ch">contact@njbcapital.ch</a></dd></div>
+      <div><dt>Address</dt><dd>Zürcherstrasse 84<br>8852 Altendorf<br>Switzerland</dd></div>
+    </dl>
+      </div></div>
+</section>
+
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <a class="foot-cta" href="#/contact"><span>Let's discuss an opportunity.</span><small>Contact NJB Capital</small></a>
+    <div class="foot-row">
+      <div class="mark" style="color:var(--brand)"><span class="mark-njb">NJB</span></div>
+      <p class="foot-legal">The information on this website is provided for general information only. It does not constitute an offer, a solicitation or investment advice.</p>
+      <p>&copy; <span id="yr">2026</span> NJB Capital</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var root=document.documentElement, header=document.getElementById('header');
+  var burger=document.getElementById('burger'), closeBtn=document.getElementById('close');
+  var panel=document.getElementById('panel'), backdrop=document.getElementById('backdrop');
+  var views={}; document.querySelectorAll('.view').forEach(function(v){views[v.id.replace('page-','')]=v;});
+  var current=null, token=0;
+  document.getElementById('yr').textContent=new Date().getFullYear();
+
+  /* ---- menu ---- */
+  function openMenu(){
+    document.body.classList.add('menu-open');
+    panel.inert=false;
+    burger.setAttribute('aria-expanded','true');
+    root.style.overflow='hidden';
+    setTimeout(function(){closeBtn.focus({preventScroll:true});},60);
+  }
+  function closeMenu(returnFocus){
+    if(!document.body.classList.contains('menu-open'))return;
+    document.body.classList.remove('menu-open');
+    panel.inert=true;
+    burger.setAttribute('aria-expanded','false');
+    root.style.overflow='';
+    if(returnFocus)burger.focus({preventScroll:true});
+  }
+  burger.addEventListener('click',openMenu);
+  closeBtn.addEventListener('click',function(){closeMenu(true);});
+  backdrop.addEventListener('click',function(){closeMenu(true);});
+  document.addEventListener('keydown',function(e){
+    if(e.key==='Escape')closeMenu(true);
+    if(e.key==='Tab'&&document.body.classList.contains('menu-open')){
+      var f=panel.querySelectorAll('a[href],button');
+      if(!f.length)return;
+      var first=f[0],last=f[f.length-1];
+      if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}
+      else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}
+    }
+  });
+  /* selecting a section closes the menu; same-page selection scrolls to top */
+  document.addEventListener('click',function(e){
+    var a=e.target.closest('a[href^="#/"]'); if(!a)return;
+    var id=a.getAttribute('href').replace('#/','');
+    if(panel.contains(a))closeMenu(false);
+    if(id===current){e.preventDefault();window.scrollTo({top:0,behavior:'smooth'});}
+  });
+
+  /* ---- header state ---- */
+  function onScroll(){header.classList.toggle('scrolled',window.scrollY>12);}
+  window.addEventListener('scroll',onScroll,{passive:true}); onScroll();
+
+  /* ---- router ---- */
+  function show(id){
+    var next=views[id],prev=current?views[current]:null,t=++token;
+    function reveal(){
+      if(t!==token)return;
+      Object.keys(views).forEach(function(k){views[k].classList.remove('active','leaving');});
+      window.scrollTo(0,0);
+      next.classList.add('active');
+      current=id;
+      document.body.setAttribute('data-page',id);
+      document.title=next.getAttribute('data-title')||'NJB Capital';
+      document.querySelectorAll('#menu a').forEach(function(a){
+        if(a.getAttribute('data-page')===id)a.setAttribute('aria-current','page'); else a.removeAttribute('aria-current');
+      });
+      onScroll();
+    }
+    if(prev){prev.classList.remove('active');prev.classList.add('leaving');setTimeout(reveal,220);}
+    else reveal();
+  }
+  function route(){
+    var id=location.hash.replace(/^#\/?/,'')||'home';
+    if(!views[id])id='home';
+    if(id!==current)show(id);
+  }
+  window.addEventListener('hashchange',route);
+  route();
+})();
+</script>
+</body>
+</html>
